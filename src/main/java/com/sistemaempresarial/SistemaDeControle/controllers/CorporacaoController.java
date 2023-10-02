@@ -1,8 +1,8 @@
 package com.sistemaempresarial.SistemaDeControle.controllers;
 
-
 import com.sistemaempresarial.SistemaDeControle.models.Colaborador;
-import com.sistemaempresarial.SistemaDeControle.services.ColaboradorService;
+import com.sistemaempresarial.SistemaDeControle.models.Corporacão;
+import com.sistemaempresarial.SistemaDeControle.services.CorporacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,38 +13,37 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/user")
 @Validated
-@RequestMapping("/colaboradores")
-public class ColaboradorController {
+public class CorporacaoController {
     @Autowired
-    private ColaboradorService colaboradorService;
+    private CorporacaoService corporacaoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Colaborador> findById(@PathVariable Long id){
-        Colaborador obj = this.colaboradorService.findById(id);
-        return ResponseEntity.ok(obj);
+    public ResponseEntity<Corporacão> findById(@PathVariable Long id){
+        Corporacão obj = this.corporacaoService.findById(id);
+        return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    @Validated
-    public ResponseEntity<Void> create(@Valid @RequestBody Colaborador obj){
-        this.colaboradorService.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody Corporacão obj){
+        this.corporacaoService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated
-    public ResponseEntity<Void> update(@Valid @RequestBody Colaborador obj, @PathVariable Long id){
-        this.colaboradorService.update(obj);
+    public ResponseEntity<Void> update(@Valid @RequestBody Corporacão obj,@PathVariable Long id){
+        obj.setId(id);
+        this.corporacaoService.update(obj);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-         this.colaboradorService.delete(id);
-         return ResponseEntity.noContent().build();
+        this.corporacaoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

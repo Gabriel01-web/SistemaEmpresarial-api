@@ -1,6 +1,7 @@
 package com.sistemaempresarial.SistemaDeControle.services;
 
 import com.sistemaempresarial.SistemaDeControle.models.ContasPagarReceber;
+import com.sistemaempresarial.SistemaDeControle.models.Corporacão;
 import com.sistemaempresarial.SistemaDeControle.models.Fornecedor;
 import com.sistemaempresarial.SistemaDeControle.repositories.ContasPagarReceberRepository;
 import com.sistemaempresarial.SistemaDeControle.repositories.FornecedorRepository;
@@ -15,36 +16,40 @@ public class ContasPagarReceberService {
     @Autowired
     private ContasPagarReceberRepository contasPagarReceberRepository;
 
-    public ContasPagarReceber findById(Long id) {
+    @Autowired
+    private CorporacaoService corporacaoService;
+
+    public ContasPagarReceber findById(Long id){
         Optional<ContasPagarReceber> contasPagarReceber = this.contasPagarReceberRepository.findById(id);
-        return contasPagarReceber.orElseThrow(() -> new RuntimeException("Conta não encontrado! Id:" + id + "Tipo:" + ContasPagarReceber.class.getName()
-        ));
+        return contasPagarReceber.orElseThrow(()-> new RuntimeException(
+                "Conta não encontrado! Id:" + id + "Tipo:" + ContasPagarReceber.class.getName()));
     }
 
     @Transactional
-    public ContasPagarReceber create(ContasPagarReceber obj) {
+    public ContasPagarReceber create(ContasPagarReceber obj){
+        Corporacão corporacão = this.corporacaoService.findById(obj.getCorporacão().getId());
         obj.setId(null);
+        obj.setCorporacão(corporacão);
         obj = this.contasPagarReceberRepository.save(obj);
         return obj;
     }
 
     @Transactional
-    public ContasPagarReceber update(ContasPagarReceber obj) {
+    public ContasPagarReceber update(ContasPagarReceber obj){
         ContasPagarReceber newobj = findById(obj.getId());
+        newobj.setNomedaconta(obj.getNomedaconta());
         newobj.setContaapagar(obj.getContaapagar());
         newobj.setContaareceber(obj.getContaareceber());
-        newobj.setNomedaconta(obj.getNomedaconta());
         return this.contasPagarReceberRepository.save(newobj);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id){
         findById(id);
-        try {
+        try{
             this.contasPagarReceberRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Não há entidades relacionadas");
+        }catch(Exception e) {
+            throw new RuntimeException("Não foi possivel deletar");
         }
-
-
     }
+
 }

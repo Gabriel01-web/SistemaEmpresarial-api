@@ -13,8 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/fornecedor")
 @Validated
+@RequestMapping("/Fornecedores")
 public class FornecedorController {
     @Autowired
     private FornecedorService fornecedorService;
@@ -22,10 +22,11 @@ public class FornecedorController {
     @GetMapping("/{id}")
     public ResponseEntity<Fornecedor> findById(@PathVariable Long id){
         Fornecedor obj = this.fornecedorService.findById(id);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok(obj);
     }
 
     @PostMapping
+    @Validated
     public ResponseEntity<Void> create(@Valid @RequestBody Fornecedor obj){
         this.fornecedorService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -34,15 +35,16 @@ public class FornecedorController {
     }
 
     @PutMapping("/{id}")
+    @Validated
     public ResponseEntity<Void> update(@Valid @RequestBody Fornecedor obj, @PathVariable Long id){
         obj.setId(id);
         this.fornecedorService.update(obj);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.fornecedorService.delete(id);
         return ResponseEntity.noContent().build();
     }
- }
+}

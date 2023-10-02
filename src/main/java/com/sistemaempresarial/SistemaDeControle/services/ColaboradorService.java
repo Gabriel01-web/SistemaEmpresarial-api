@@ -1,6 +1,8 @@
 package com.sistemaempresarial.SistemaDeControle.services;
 
 import com.sistemaempresarial.SistemaDeControle.models.Colaborador;
+import com.sistemaempresarial.SistemaDeControle.models.ContasPagarReceber;
+import com.sistemaempresarial.SistemaDeControle.models.Corporacão;
 import com.sistemaempresarial.SistemaDeControle.repositories.ColaboradorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,20 @@ public class ColaboradorService {
     @Autowired
     private ColaboradorRepository colaboradorRepository;
 
+    @Autowired
+    private CorporacaoService corporacaoService;
+
     public Colaborador findById(Long id){
         Optional<Colaborador> colaborador = this.colaboradorRepository.findById(id);
         return colaborador.orElseThrow(()-> new RuntimeException(
-            "Colaborador não encontrado! Id:" + id + "Tipo:" + Colaborador.class.getName()
-        ));
+                "Conta não encontrado! Id:" + id + "Tipo:" + Colaborador.class.getName()));
     }
 
     @Transactional
     public Colaborador create(Colaborador obj){
+        Corporacão corporacão = this.corporacaoService.findById(obj.getCorporacão().getId());
         obj.setId(null);
+        obj.setCorporacão(corporacão);
         obj = this.colaboradorRepository.save(obj);
         return obj;
     }
@@ -30,7 +36,7 @@ public class ColaboradorService {
     @Transactional
     public Colaborador update(Colaborador obj){
         Colaborador newobj = findById(obj.getId());
-        newobj.setPassword(obj.getPassword());
+        newobj.setUsername(obj.getUsername());
         return this.colaboradorRepository.save(newobj);
     }
 
@@ -38,8 +44,8 @@ public class ColaboradorService {
         findById(id);
         try{
             this.colaboradorRepository.deleteById(id);
-        }catch(Exception e){
-            throw new RuntimeException("Não há entidades relacionadas");
+        }catch(Exception e) {
+            throw new RuntimeException("Não foi possivel deletar");
         }
     }
 

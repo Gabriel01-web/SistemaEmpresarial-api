@@ -1,7 +1,8 @@
 package com.sistemaempresarial.SistemaDeControle.controllers;
 
+
+
 import com.sistemaempresarial.SistemaDeControle.models.ContasPagarReceber;
-import com.sistemaempresarial.SistemaDeControle.models.Fornecedor;
 import com.sistemaempresarial.SistemaDeControle.services.ContasPagarReceberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/contasapagarereceber")
 @Validated
+@RequestMapping("/Contas")
 public class ContasPagarReceberController {
     @Autowired
     private ContasPagarReceberService contasPagarReceberService;
@@ -22,10 +23,11 @@ public class ContasPagarReceberController {
     @GetMapping("/{id}")
     public ResponseEntity<ContasPagarReceber> findById(@PathVariable Long id){
         ContasPagarReceber obj = this.contasPagarReceberService.findById(id);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok(obj);
     }
 
     @PostMapping
+    @Validated
     public ResponseEntity<Void> create(@Valid @RequestBody ContasPagarReceber obj){
         this.contasPagarReceberService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -34,16 +36,16 @@ public class ContasPagarReceberController {
     }
 
     @PutMapping("/{id}")
+    @Validated
     public ResponseEntity<Void> update(@Valid @RequestBody ContasPagarReceber obj, @PathVariable Long id){
         obj.setId(id);
         this.contasPagarReceberService.update(obj);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.contasPagarReceberService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

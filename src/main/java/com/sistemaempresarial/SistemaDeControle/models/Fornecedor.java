@@ -45,5 +45,9 @@ public class Fornecedor {
     @NotBlank
     private String endereco;
 
+    @ManyToOne
+    @JoinColumn(name = "corporacao_id",nullable = false, updatable = false)
+    private Corporacão corporacão;
+
 
 }

@@ -24,7 +24,6 @@ public class ContasPagarReceber {
     @NotBlank
     private String nomedaconta;
 
-
     @Column(name = "contasareceber",length = 53, nullable = false)
     @Size(min = 1, max=53)
     @NotNull
@@ -34,5 +33,9 @@ public class ContasPagarReceber {
     @Size(min = 1, max=53)
     @NotNull
     private double contaapagar;
+
+    @ManyToOne
+    @JoinColumn(name = "corporacao_id",nullable = false, updatable = false)
+    private Corporacão corporacão;
 
 }

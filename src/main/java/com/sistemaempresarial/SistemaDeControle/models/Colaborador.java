@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class Colaborador {
     @Id
     @Column(name="id", unique = true)
@@ -59,6 +58,10 @@ public class Colaborador {
     @Size(min = 1, max=250)
     @NotBlank
     private String endereco;
+
+    @ManyToOne
+    @JoinColumn(name = "corporação_id", nullable = false, updatable = false)
+    private Corporacão corporacão;
 
 
 }
